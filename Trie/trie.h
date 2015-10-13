@@ -28,6 +28,8 @@ struct trie {
 #define BITS_USED 8
 /* 1 for success, 0 for failed */
 int trie_init(struct trie * mytrie, char * index_file_name, size_t file_size_MB, uint max_nodes);
+void trie_insert(struct trie * mytrie, ull from, ull to);
+void trie_build_from_file(struct trie * mytrie);
 int trie_query(struct trie * mytrie, char * str);
 
 #endif

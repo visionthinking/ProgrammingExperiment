@@ -151,8 +151,6 @@ int trie_init(struct trie * mytrie, char * index_file_name, size_t file_size_MB,
 		return 0;
 	}
 	create_node(mytrie, 0, 0, 0, 0, 0);
-	
-	trie_build_from_file(mytrie);
 	return 1;
 }
 
