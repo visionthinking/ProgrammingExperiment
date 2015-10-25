@@ -99,6 +99,8 @@ void thread_pool_destory(struct thread_pool * pool){
 			pool->task_list = p;
 		}
 		pool->task_num = 0;
+		pool->task_list = NULL;
+		pool->task_list_tail = NULL;
 	}
 	pthread_mutex_unlock(&pool->queue_lock);
 	
