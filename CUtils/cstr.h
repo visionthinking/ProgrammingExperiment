@@ -7,7 +7,7 @@ Date:   2015/11/09
 #define __CSTR_H__
 
 #define uint unsigned int
-#define CSTR_INIT_CAPACITY 5
+#define CSTR_INIT_CAPACITY 256
 
 struct cstr {
 	char * _;
