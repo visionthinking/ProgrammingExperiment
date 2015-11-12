@@ -18,6 +18,7 @@ int cstr_expand(struct cstr * s, uint to_len){
 		s->capacity = to_len;
 		return 0;
 	}
+	fprintf(stderr, "cstr_expand: Memory Error!");
 	return -1;
 }
 
@@ -33,8 +34,15 @@ void cstr_init(struct cstr * s){
 	s->_[0] = '\0';
 }
 
+void cstr_copy(struct cstr * s, struct cstr * src){
+	cstr_init(s);
+	cstr_append(s, src->_);
+}
+
 void cstr_append(struct cstr * s, char * str){
-	uint len = strlen(str), expanded_size;
+	uint len, expanded_size;
+	if(str == NULL) return;
+	len = strlen(str);
 	if(len > s->capacity - s->len){
 		expanded_size = s->capacity * 2;
 		while(len > expanded_size - s->len){
@@ -76,6 +84,18 @@ void cstr_replace(struct cstr * s, char * target, char * replacement){
 		s->len = s->len + re_len - tar_len;
 		s->_[s->len] = '\0';
 	}
+}
+
+void cstr_remove(struct cstr * s, uint start){
+	s->_[start] = '\0';
+	s->len = start;
+}
+
+void cstr_substr(struct cstr * s, uint start, uint len){
+	len = (s->len - start < len) ? s->len - start : len;
+	memmove(s->_, s->_ + start, len);
+	s->_[len] = '\0';
+	s->len = len;
 }
 
 void cstr_free(struct cstr * s){
