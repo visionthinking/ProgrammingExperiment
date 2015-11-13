@@ -35,7 +35,7 @@ void * thread_pool_process(void * args){
 		pool->task_list->next = current_task->next;
 		pool->task_num -= 1;
 		if(pool->task_num == 0){
-			pool->task_list_tail = pool->task_list;;
+			pool->task_list_tail = pool->task_list;
 		}
 		pthread_mutex_unlock(&pool->queue_lock);
 		
@@ -64,7 +64,7 @@ void thread_pool_start(struct thread_pool * pool){
 
 int thread_pool_init(struct thread_pool * pool, unsigned int thread_num){
 	pool->thread_num = thread_num < THREAD_POOL_MAX_THREADNUM ? thread_num : THREAD_POOL_MAX_THREADNUM;
-	pool->task_list = malloc(sizeof(struct task));
+	pool->task_list = (struct task*) malloc(sizeof(struct task));
 	if(!pool->task_list){
 		fprintf(stderr, "Creating thread pool error.\n");
 		return -1;
@@ -85,7 +85,7 @@ void thread_pool_destory(struct thread_pool * pool){
 	}
 	pool->running = 0;
 	
-	pthread_cond_broadcast (&pool->queue_ready);
+	pthread_cond_broadcast(&pool->queue_ready);
 	for (i = 0; i < pool->thread_num; i++){
     	pthread_join(pool->threads[i], NULL);
     }
@@ -109,7 +109,7 @@ void thread_pool_destory(struct thread_pool * pool){
 }
 
 int thread_pool_add_task(struct thread_pool * pool, TASK_FUNC func, void * arg, int id){
-	struct task * new_task = malloc(sizeof(struct task));
+	struct task * new_task = (struct task*) malloc(sizeof(struct task));
 	if(!new_task){
 		return -1;
 	}
