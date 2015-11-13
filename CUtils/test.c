@@ -11,8 +11,11 @@ int main(void){
 	printf("len=%u capacity=%u\n", s.len, s.capacity);
 	
 	cstr_append(&s, NULL);
-	cstr_append(&s, "Hello!");
-	printf("%s len=%u capacity=%u\n", s._, s.len, s.capacity);
+	printf("%d\n", cstr_find(&s, 0, "123"));
+	
+	cstr_append(&s, "  Hello!  ");
+	cstr_trim(&s);
+	printf("[%s] len=%u capacity=%u\n", s._, s.len, s.capacity);
 	
 	printf("%d\n", cstr_find(&s, 0, "lo"));
 	
@@ -26,10 +29,15 @@ int main(void){
 	printf("[%s] len=%u capacity=%u\n", s0._, s0.len, s0.capacity);
 	
 	cstr_remove(&s0, 0);
-	cstr_append(&s0, "http://10.3.8.211:8080/index/");
+	cstr_append(&s0, "http://10.3.8.211:8080/index/index.html");
 	if((pos = cstr_find(&s0, 0, "http://")) >= 0){
 		cstr_substr(&s0, 7, s0.len);
 	}
+	printf("[%s] len=%u capacity=%u\n", s0._, s0.len, s0.capacity);
+	
+	pos = cstr_postfix(&s0, ".html");
+	printf("postfix: %d\n", pos);
+	cstr_remove(&s0, pos);
 	printf("[%s] len=%u capacity=%u\n", s0._, s0.len, s0.capacity);
 	
 	cstr_free(&s);

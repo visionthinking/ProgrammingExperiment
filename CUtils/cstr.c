@@ -98,6 +98,24 @@ void cstr_substr(struct cstr * s, uint start, uint len){
 	s->len = len;
 }
 
+int  cstr_postfix(struct cstr * s, char * postfix){
+	uint len = strlen(postfix);
+	int pos;
+	if(len < s->len){
+		if((pos = cstr_find(s, s->len - len, postfix)) >= 0){
+			return pos;
+		}
+	}
+	return -1;
+}
+
+void cstr_trim(struct cstr * s){
+	uint l = 0, r = s->len - 1;
+	while(l < s->len && s->_[l] <= 32) l+=1;
+	while(r >= 0 && r >= l && s->_[r] <= 32) r-=1;
+	cstr_substr(s, l, r - l + 1);
+}
+
 void cstr_free(struct cstr * s){
 	free(s->_);
 	s->_ = NULL;
