@@ -39,7 +39,7 @@ void message_queue_example(){
 	// get all of the messages.
 	while(q.msg_num){
 		x = *((int*)message_queue_pop(&q));
-		printf("msg: %d\n", x);
+		printf("msg: %d\n", x);	
 	}
 	
 	// destroy

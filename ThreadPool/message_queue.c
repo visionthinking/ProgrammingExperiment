@@ -59,6 +59,7 @@ int  message_queue_push(struct message_queue * q, void * data){
 	q->msg_list_tail = msg;
 	q->msg_num += 1;
 	pthread_mutex_unlock(&q->queue_lock);
+	pthread_cond_signal(&q->queue_ready);
 	return 0;
 }
 
