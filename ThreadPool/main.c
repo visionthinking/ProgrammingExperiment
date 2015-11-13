@@ -5,7 +5,7 @@
 #include "message_queue.h"
 
 void task(void * arg, int id){
-	int i = 100000000;
+	int i = 10000000;
 	while(i--){
 	}
 	printf("task %d: finish.\n", id);
@@ -19,27 +19,27 @@ void thread_pool_example(){
 	for(i=0;i<20;i++){
 		thread_pool_add_task(&pool, task, NULL, i);
 	}
-	thread_sleep(2000);
+	thread_sleep(1000);
 	thread_pool_destory(&pool);
 }
 
 void message_queue_example(){
-	int i;
+	int i, x;
 	struct message_queue q;
-	struct message_pack msg;
+	int data[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 	
 	// initialize.
 	message_queue_init(&q);
 	
-	// add 20 messages.
-	for(i=0;i<20;i++){
-		message_queue_push(&q, NULL, 0, i);
+	// add messages.
+	for(i=0;i<10;i++){
+		message_queue_push(&q, &data[i]);
 	}
 	
 	// get all of the messages.
 	while(q.msg_num){
-		message_queue_pop(&q, &msg);
-		printf("msg: %d\n", msg.id);
+		x = *((int*)message_queue_pop(&q));
+		printf("msg: %d\n", x);
 	}
 	
 	// destroy

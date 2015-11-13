@@ -45,15 +45,13 @@ void message_queue_destroy(struct message_queue * q){
     pthread_cond_destroy(&q->queue_ready);
 }
 
-int message_queue_push(struct message_queue * q, void * data, unsigned int data_len, int id){
+int  message_queue_push(struct message_queue * q, void * data){
 	struct message_pack * msg = (struct message_pack *) malloc(sizeof(struct message_pack));
 	if(!msg){
 		fprintf(stderr, "message_queue_push: Memory Error");
 		return -1;	
 	}
-	msg->id = id;
 	msg->data = data;
-	msg->data_len = data_len;
 	msg->next = NULL;
 	
 	pthread_mutex_lock(&q->queue_lock);
@@ -64,8 +62,9 @@ int message_queue_push(struct message_queue * q, void * data, unsigned int data_
 	return 0;
 }
 
-void message_queue_pop(struct message_queue * q, struct message_pack * msg){
+void * message_queue_pop(struct message_queue * q){
 	struct message_pack * first = NULL;
+	void * data = NULL;
 	pthread_mutex_lock(&q->queue_lock);
 	while(q->msg_num == 0 && q->is_running){
 		pthread_cond_wait(&q->queue_ready, &q->queue_lock);
@@ -82,9 +81,9 @@ void message_queue_pop(struct message_queue * q, struct message_pack * msg){
 	}
 	pthread_mutex_unlock(&q->queue_lock);
 	
-	first->next = NULL;
-	memcpy(msg, first, sizeof(struct message_pack));
+	data = first->data; 
 	free(first);
+	return data;
 }
 
 
