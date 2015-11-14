@@ -18,7 +18,7 @@ int cstr_expand(struct cstr * s, uint to_len){
 		s->capacity = to_len;
 		return 0;
 	}
-	fprintf(stderr, "cstr_expand: Memory Error!");
+	fprintf(stdout, "cstr_expand: Memory Error!");
 	return -1;
 }
 
@@ -27,7 +27,7 @@ void cstr_init(struct cstr * s){
 	s->capacity = CSTR_INIT_CAPACITY;
 	s->_ = malloc(sizeof(char) * (s->capacity+1));
 	if(!s->_){
-		fprintf(stderr, "cstr_init: Memory Error!");
+		fprintf(stdout, "cstr_init: Memory Error!");
 		s->capacity = 0;
 		return;
 	}
@@ -74,6 +74,9 @@ int  cstr_find_last(struct cstr * s, char * str){
 	if(len > s->len){
 		return -1;	
 	}
+	if(len == 0){
+		return 0;	
+	}
 	pch = s->_ + s->len - len;
 	while(pch >= s->_){
 		if(strncmp(pch, str, len) == 0){
@@ -103,11 +106,16 @@ void cstr_replace(struct cstr * s, char * target, char * replacement){
 }
 
 void cstr_remove(struct cstr * s, uint start){
+	if(start > s->len) return;
 	s->_[start] = '\0';
 	s->len = start;
 }
 
 void cstr_substr(struct cstr * s, uint start, uint len){
+	if(start > s->len){
+		cstr_remove(s, 0);
+		return;
+	}
 	len = (s->len - start < len) ? s->len - start : len;
 	memmove(s->_, s->_ + start, len);
 	s->_[len] = '\0';
@@ -117,7 +125,10 @@ void cstr_substr(struct cstr * s, uint start, uint len){
 int  cstr_postfix(struct cstr * s, char * postfix){
 	uint len = strlen(postfix);
 	int pos;
-	if(len < s->len){
+	if(len == 0){
+		return 0;	
+	}
+	if(len <= s->len){
 		if((pos = cstr_find(s, s->len - len, postfix)) >= 0){
 			return pos;
 		}
@@ -138,7 +149,7 @@ void cstr_trim(struct cstr * s){
 }
 
 void cstr_free(struct cstr * s){
-	free(s->_);
+	if(s->_) free(s->_);
 	s->_ = NULL;
 	s->len = 0;
 	s->capacity = 0;
