@@ -68,6 +68,22 @@ int  cstr_find(struct cstr * s, uint start, char * str){
 	return -1;
 }
 
+int  cstr_find_last(struct cstr * s, char * str){
+	char * pch;
+	uint len = strlen(str);
+	if(len > s->len){
+		return -1;	
+	}
+	pch = s->_ + s->len - len;
+	while(pch >= s->_){
+		if(strncmp(pch, str, len) == 0){
+			return pch - s->_;
+		}
+		pch -= 1;
+	}
+	return -1;
+}
+
 void cstr_replace(struct cstr * s, char * target, char * replacement){
 	uint re_len = strlen(replacement), tar_len = strlen(target);
 	int index = cstr_find(s, 0, target);
@@ -111,9 +127,14 @@ int  cstr_postfix(struct cstr * s, char * postfix){
 
 void cstr_trim(struct cstr * s){
 	uint l = 0, r = s->len - 1;
-	while(l < s->len && s->_[l] <= 32) l+=1;
-	while(r >= 0 && r >= l && s->_[r] <= 32) r-=1;
-	cstr_substr(s, l, r - l + 1);
+	if(s->len == 0) return;
+	while(l < r && s->_[l] <= 32) l+=1;
+	while(r >= l && s->_[r] <= 32) r-=1;
+	if (r < l) {
+		cstr_remove(s, 0);
+	}else{
+		cstr_substr(s, l, r - l + 1);
+	}
 }
 
 void cstr_free(struct cstr * s){

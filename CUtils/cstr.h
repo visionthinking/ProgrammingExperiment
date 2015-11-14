@@ -19,6 +19,7 @@ void cstr_init(struct cstr * s);
 void cstr_copy(struct cstr * s, struct cstr * src);
 void cstr_append(struct cstr * s, char * str);
 int  cstr_find(struct cstr * s, uint start, char * str);
+int  cstr_find_last(struct cstr * s, char * str);
 void cstr_replace(struct cstr * s, char * target, char * replacement);
 void cstr_remove(struct cstr * s, uint start);
 void cstr_substr(struct cstr * s, uint start, uint len);
