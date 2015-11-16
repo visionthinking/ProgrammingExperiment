@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 #include "cstr.h"
 
 void test_cstr_append(){
@@ -9,8 +10,20 @@ void test_cstr_append(){
 	cstr_init(&s0);
 	cstr_append(&s0, NULL);
 	cstr_append(&s0, "   ");
-	cstr_append(&s0, "hellohellohellohellohellohellohellohello");
+	cstr_append(&s0, "hello");
 	cstr_append(&s0, NULL);
+	printf("[%s] len=%u capacity=%u\n\n", s0._, s0.len, s0.capacity);
+	cstr_free(&s0);		
+}
+
+void test_cstr_nappend(){
+	struct cstr s0;
+	printf("test_cstr_nappend: \n");
+	cstr_init(&s0);
+	cstr_nappend(&s0, NULL, 0);
+	cstr_nappend(&s0, "xxx", 3);
+	cstr_nappend(&s0, "123", 1);
+	cstr_nappend(&s0, NULL, 0);
 	printf("[%s] len=%u capacity=%u\n\n", s0._, s0.len, s0.capacity);
 	cstr_free(&s0);		
 }
@@ -52,6 +65,19 @@ void test_cstr_replace(){
 	cstr_init(&s0);
 	cstr_append(&s0, "abc.xyz");
 	cstr_replace(&s0, "c.x", "w");
+	assert(strcmp(s0._, "abwyz") == 0);
+	cstr_replace(&s0, s0._, "");
+	printf("[%s] len=%u capacity=%u\n\n", s0._, s0.len, s0.capacity);
+	cstr_free(&s0);
+}
+
+void test_cstr_replace_all(){
+	struct cstr s0;
+	printf("test_cstr_replace_all: \n");
+	cstr_init(&s0);
+	cstr_append(&s0, "10_3_8_211:8080");
+	cstr_replace_all(&s0, "_", ".");
+	assert(strcmp(s0._, "10.3.8.211:8080") == 0);
 	printf("[%s] len=%u capacity=%u\n\n", s0._, s0.len, s0.capacity);
 	cstr_free(&s0);
 }
@@ -66,15 +92,29 @@ void test_cstr_substr(){
 	cstr_free(&s0);
 }
 
+
+void test_cstr_trim(){
+	struct cstr s0;
+	printf("test_cstr_trim: \n");
+	cstr_init(&s0);
+	cstr_append(&s0, "http://news.sohu.com/s2013/newsmaker198/");
+	cstr_trim(&s0);
+	printf("[%s] len=%u capacity=%u\n\n", s0._, s0.len, s0.capacity);
+	cstr_free(&s0);
+}
+
 int main(void){
 	struct cstr s, s0, s1;
 	int pos;
 	
 	test_cstr_append();
+	test_cstr_nappend();
 	test_cstr_copy();
 	test_cstr_postfix();
 	test_cstr_find_last();
 	test_cstr_replace();
+	test_cstr_replace_all();
 	test_cstr_substr();
+	test_cstr_trim();
 	return 0;
 }

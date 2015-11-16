@@ -82,7 +82,7 @@ int  cstr_find_last(struct cstr * s, char * str){
 	return -1;
 }
 
-void cstr_replace(struct cstr * s, char * target, char * replacement){
+uint cstr_replace(struct cstr * s, char * target, char * replacement){
 	assert(target);
 	assert(replacement);
 	uint re_len, tar_len;
@@ -99,7 +99,17 @@ void cstr_replace(struct cstr * s, char * target, char * replacement){
 		memmove(s->_ + index, replacement, re_len);
 		s->len = s->len + re_len - tar_len;
 		s->_[s->len] = '\0';
+		return 1;
 	}
+	return 0;
+}
+
+uint cstr_replace_all(struct cstr * s, char * target, char * replacement){
+	uint cnt = 0;
+	while(cstr_replace(s, target, replacement)){
+		cnt += 1;
+	}
+	return cnt;
 }
 
 void cstr_remove(struct cstr * s, uint start){

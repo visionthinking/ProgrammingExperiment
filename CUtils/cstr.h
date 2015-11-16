@@ -21,7 +21,8 @@ void cstr_append(struct cstr * s, char * str);
 void cstr_nappend(struct cstr * s, char * str, uint len);
 int  cstr_find(struct cstr * s, uint start, char * str);
 int  cstr_find_last(struct cstr * s, char * str);
-void cstr_replace(struct cstr * s, char * target, char * replacement);
+uint cstr_replace(struct cstr * s, char * target, char * replacement);
+uint cstr_replace_all(struct cstr * s, char * target, char * replacement);
 void cstr_remove(struct cstr * s, uint start);
 void cstr_substr(struct cstr * s, uint start, uint len);
 /* return the start position of postfix, otherwise -1. */
