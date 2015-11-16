@@ -144,9 +144,9 @@ int  cstr_postfix(struct cstr * s, char * postfix){
 }
 
 void cstr_trim(struct cstr * s){
-	uint l = 0, r = s->len - 1;
 	if(s->len == 0) return;
-	while(l < r && s->_[l] <= 32) l+=1;
+	uint l = 0, r = s->len - 1;
+	while(l <= r && s->_[l] <= 32) l+=1;
 	while(r >= l && s->_[r] <= 32) r-=1;
 	if (r < l) {
 		cstr_remove(s, 0);

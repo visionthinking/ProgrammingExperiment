@@ -97,16 +97,13 @@ void test_cstr_trim(){
 	struct cstr s0;
 	printf("test_cstr_trim: \n");
 	cstr_init(&s0);
-	cstr_append(&s0, "http://news.sohu.com/s2013/newsmaker198/");
+	cstr_append(&s0, "\n");
 	cstr_trim(&s0);
 	printf("[%s] len=%u capacity=%u\n\n", s0._, s0.len, s0.capacity);
 	cstr_free(&s0);
 }
 
 int main(void){
-	struct cstr s, s0, s1;
-	int pos;
-	
 	test_cstr_append();
 	test_cstr_nappend();
 	test_cstr_copy();
