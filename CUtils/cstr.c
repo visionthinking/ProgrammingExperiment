@@ -173,6 +173,7 @@ struct cstr * cstr_new(){
 void cstr_delete(struct cstr ** s){
 	cstr_free(*s);
 	free(*s);
+	*s = NULL;
 }
 
 
