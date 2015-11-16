@@ -3,34 +3,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 static
-int cstr_expand(struct cstr * s, uint to_len){
+void cstr_expand(struct cstr * s, uint to_len){
 	char * new_block = NULL;
-	if(to_len <= s->len){
-		return 0;
+	if(to_len <= s->capacity){
+		return;
 	}
-	new_block = malloc(sizeof(char) * (to_len+1));
-	if(new_block){
-		strncpy(new_block, s->_, s->capacity);
-		free(s->_);
-		s->_ = new_block;
-		s->capacity = to_len;
-		return 0;
+	while(s->capacity < to_len){
+		s->capacity *= 2;
 	}
-	fprintf(stdout, "cstr_expand: Memory Error!");
-	return -1;
+	new_block = malloc(s->capacity + 1);
+	assert(new_block);
+	
+	memcpy(new_block, s->_, s->len);
+	s->_[s->len] = 0;
+	free(s->_);
+	s->_ = new_block;
 }
 
 void cstr_init(struct cstr * s){
 	s->len = 0;
 	s->capacity = CSTR_INIT_CAPACITY;
-	s->_ = malloc(sizeof(char) * (s->capacity+1));
-	if(!s->_){
-		fprintf(stdout, "cstr_init: Memory Error!");
-		s->capacity = 0;
-		return;
-	}
+	s->_ = malloc(s->capacity + 1);
+	assert(s->_);
 	s->_[0] = '\0';
 }
 
@@ -40,20 +37,18 @@ void cstr_copy(struct cstr * s, struct cstr * src){
 }
 
 void cstr_append(struct cstr * s, char * str){
-	uint len, expanded_size;
 	if(str == NULL) return;
-	len = strlen(str);
-	if(len > s->capacity - s->len){
-		expanded_size = s->capacity * 2;
-		while(len > expanded_size - s->len){
-			expanded_size *= 2;
-		}
-		if(cstr_expand(s, expanded_size)){
-			return;	
-		}
+	cstr_nappend(s, str, strlen(str));
+}
+
+void cstr_nappend(struct cstr * s, char * str, uint len){
+	if(str == NULL || len == 0) return;
+	if(len + s->len > s->capacity){
+		cstr_expand(s, len + s->len);
 	}
-	strcat(s->_, str);
+	memmove(s->_ + s->len, str, len);
 	s->len += len;
+	s->_[s->len] = '\0';
 }
 
 int  cstr_find(struct cstr * s, uint start, char * str){
@@ -88,18 +83,20 @@ int  cstr_find_last(struct cstr * s, char * str){
 }
 
 void cstr_replace(struct cstr * s, char * target, char * replacement){
-	uint re_len = strlen(replacement), tar_len = strlen(target);
+	assert(target);
+	assert(replacement);
+	uint re_len, tar_len;
 	int index = cstr_find(s, 0, target);
-	if(index != -1){
+	if(index >= 0){
+		re_len = strlen(replacement);
+		tar_len = strlen(target);
 		if(s->len - tar_len + re_len > s->capacity){
-			if(cstr_expand(s, s->len - tar_len + re_len)){
-				return;
-			}
+			cstr_expand(s, s->len - tar_len + re_len);
 		}
 		if(re_len != tar_len){
 			memmove(s->_ + index + re_len, s->_ + index + tar_len, s->len - (index + tar_len) );
 		}
-		strncpy(s->_ + index, replacement, re_len);
+		memmove(s->_ + index, replacement, re_len);
 		s->len = s->len + re_len - tar_len;
 		s->_[s->len] = '\0';
 	}
@@ -149,7 +146,8 @@ void cstr_trim(struct cstr * s){
 }
 
 void cstr_free(struct cstr * s){
-	if(s->_) free(s->_);
+	assert(s->_);
+	free(s->_);
 	s->_ = NULL;
 	s->len = 0;
 	s->capacity = 0;
