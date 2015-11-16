@@ -103,6 +103,14 @@ void test_cstr_trim(){
 	cstr_free(&s0);
 }
 
+void test_cstr_create(){
+	printf("test_cstr_create: \n");
+	cstr_t s0 = cstr_new();
+	cstr_append(s0, "xxx");
+	printf("[%s] len=%u capacity=%u\n\n", s0->_, s0->len, s0->capacity);
+	cstr_delete(&s0);
+}
+
 int main(void){
 	test_cstr_append();
 	test_cstr_nappend();
@@ -113,5 +121,6 @@ int main(void){
 	test_cstr_replace_all();
 	test_cstr_substr();
 	test_cstr_trim();
+	test_cstr_create();
 	return 0;
 }

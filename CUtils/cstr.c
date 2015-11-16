@@ -163,4 +163,16 @@ void cstr_free(struct cstr * s){
 	s->capacity = 0;
 }
 
+struct cstr * cstr_new(){
+	struct cstr * s = malloc(sizeof(struct cstr));
+	assert(s);
+	cstr_init(s);
+	return s;
+}
+
+void cstr_delete(struct cstr ** s){
+	cstr_free(*s);
+	free(*s);
+}
+
 

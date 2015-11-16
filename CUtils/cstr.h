@@ -15,7 +15,15 @@ struct cstr {
 	uint capacity;
 };
 
+typedef struct cstr * cstr_t;
+
+/* should be cstr_delete after used */
+cstr_t cstr_new();
+void cstr_delete(cstr_t * s);
+/* should be cstr_free after used */
 void cstr_init(struct cstr * s);
+void cstr_free(struct cstr * s);
+/* should be cstr_free after used */
 void cstr_copy(struct cstr * s, struct cstr * src);
 void cstr_append(struct cstr * s, char * str);
 void cstr_nappend(struct cstr * s, char * str, uint len);
@@ -29,6 +37,5 @@ void cstr_substr(struct cstr * s, uint start, uint len);
 int  cstr_postfix(struct cstr * s, char * postfix);
 /* trim blanks (ascii <= 0x20) */
 void cstr_trim(struct cstr * s);
-void cstr_free(struct cstr * s);
 
 #endif
