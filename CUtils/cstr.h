@@ -1,6 +1,6 @@
 /*
 Author: RainVision
-Date:   2015/11/09
+Date:   2015/11/16
 */
 
 #ifndef __CSTR_H__
