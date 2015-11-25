@@ -4,6 +4,15 @@
 #include <assert.h>
 #include "cstr.h"
 
+void test_cstr_insert(){
+	cstr_t s0 = cstr_new();
+	printf("test_cstr_insert: \n");
+	cstr_append(s0, "12345");
+	cstr_insert(s0, 2, "xxx", 3);
+	printf("[%s] len=%u capacity=%u\n\n", s0->_, s0->len, s0->capacity);
+	cstr_delete(&s0);
+}
+
 void test_cstr_append(){
 	cstr_t s0 = cstr_new();
 	printf("test_cstr_append: \n");
@@ -104,6 +113,7 @@ void test_cstr_create(){
 }
 
 int main(void){
+	test_cstr_insert();
 	test_cstr_append();
 	test_cstr_nappend();
 	test_cstr_copy();

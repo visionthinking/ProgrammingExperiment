@@ -1,6 +1,6 @@
 /*
 Author: RainVision
-Date:   2015/11/16
+Date:   2015/11/09
 */
 
 #ifndef __CSTR_H__
@@ -25,6 +25,7 @@ void cstr_init(struct cstr * s);
 void cstr_free(struct cstr * s);
 /* should be cstr_free after used */
 void cstr_copy(struct cstr * s, struct cstr * src);
+void cstr_insert(struct cstr * s, uint start, char * str, uint len);
 void cstr_append(struct cstr * s, char * str);
 void cstr_nappend(struct cstr * s, char * str, uint len);
 int  cstr_find(struct cstr * s, uint start, char * str);

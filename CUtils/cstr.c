@@ -36,6 +36,18 @@ void cstr_copy(struct cstr * s, struct cstr * src){
 	cstr_append(s, src->_);
 }
 
+void cstr_insert(struct cstr * s, uint start, char * str, uint len){
+	if(str == NULL || len == 0) return;
+	assert(start <= s->len);
+	if(len + s->len > s->capacity){
+		cstr_expand(s, len + s->len);
+	}
+	memmove(s->_ + start + len, s->_ + start, s->len - start);
+	memmove(s->_ + start, str, len);
+	s->len += len;
+	s->_[s->len] = '\0';
+}
+
 void cstr_append(struct cstr * s, char * str){
 	if(str == NULL) return;
 	cstr_nappend(s, str, strlen(str));
